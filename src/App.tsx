@@ -24,39 +24,45 @@ const Button = ({ onClick, children, className = "" }: { onClick: () => void, ch
   </motion.button>
 );
 
-const PageWrapper = ({ children, id }: { children: React.ReactNode, id: string }) => (
+// Wrapper untuk transisi antar halaman
+const PageContent = ({ children, videoSrc, title }: { children: React.ReactNode, videoSrc?: string, title?: string }) => (
   <motion.div
-    key={id}
-    initial={{ opacity: 0, x: 20, scale: 0.98 }}
-    animate={{ opacity: 1, x: 0, scale: 1 }}
-    exit={{ opacity: 0, x: -20, scale: 0.98 }}
-    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-    className="w-full max-w-lg mx-auto flex flex-col items-center justify-center p-8 text-center invitation-card rounded-[2.5rem] relative overflow-hidden min-h-[70vh] shadow-2xl"
+    initial={{ opacity: 0, x: 50 }}
+    animate={{ opacity: 1, x: 0 }}
+    exit={{ opacity: 0, x: -50 }}
+    transition={{ duration: 0.6, ease: "easeInOut" }}
+    className="w-full max-w-lg mx-auto flex flex-col items-center justify-center p-8 text-center invitation-card rounded-[2.5rem] relative overflow-hidden min-h-[65vh] shadow-2xl"
   >
-    {children}
+    {videoSrc && (
+      <div className="absolute inset-0 w-full h-full pointer-events-none">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover opacity-30"
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
+      </div>
+    )}
+    
+    {title && <div className="title-banner-sakura uppercase tracking-[0.2em] relative z-10 mb-6">{title}</div>}
+    <div className="flex-1 flex flex-col items-center justify-center w-full relative z-10">
+      {children}
+    </div>
   </motion.div>
 );
-
-// --- Main App ---
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState(0);
 
-  const pages = ['welcome', 'schedule', 'time', 'gallery'];
-
-  const nextPage = () => {
-    if (currentPage < pages.length - 1) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const prevPage = () => {
-    setCurrentPage(0); // Reset ke awal
-  };
+  const nextPage = () => setCurrentPage((prev) => prev + 1);
+  const resetPage = () => setCurrentPage(0);
 
   return (
-    <div className="relative min-h-screen bg-luxury-pink flex items-center justify-center overflow-hidden p-4">
-      {/* Background Music */}
+    <div className="relative min-h-screen bg-luxury-pink flex items-center justify-center p-4 overflow-hidden">
+      {/* Background Music - Tetap Aktif di Semua Halaman */}
       <audio
         src="https://github.com/marcellnw/undanganfamilyjuvi/raw/refs/heads/main/Aesthetic%20sound.mp3"
         autoPlay
@@ -77,61 +83,42 @@ export default function App() {
               top: `-50px`,
               width: `${Math.random() * 10 + 10}px`,
               height: `${Math.random() * 10 + 10}px`,
-              animationDelay: `${Math.random() * i}s`,
+              animationDelay: `${Math.random() * 10}s`,
               animationDuration: `${Math.random() * 15 + 10}s`
             }} 
           />
         ))}
       </div>
-      
-      {/* Decorative Ornaments */}
-      <div className="fixed top-0 left-0 w-[50vw] h-[50vh] bg-sakura/10 rounded-full blur-[100px] pointer-events-none z-0" />
-      <div className="fixed bottom-0 right-0 w-[50vw] h-[50vh] bg-sakura/10 rounded-full blur-[100px] pointer-events-none z-0" />
 
-      <main className="relative z-20 w-full flex items-center justify-center">
+      <main className="relative z-20 w-full">
         <AnimatePresence mode="wait">
           {currentPage === 0 && (
-            <PageWrapper id="welcome">
+            <PageContent 
+              key="welcome"
+              videoSrc="https://github.com/marcellnw/undanganfamilyjuvi/raw/refs/heads/main/From%20KlickPin%20CF%20%E3%80%8C%E3%80%8Ca%20Idee%20matrimoni%E3%80%8D%E3%81%8A%E3%81%97%E3%82%83%E3%82%8C%E3%81%BE%E3%81%A8%E3%82%81%E3%81%AE%E4%BA%BA%E6%B0%97%E3%82%A2%E3%82%A4%E3%83%87%E3%82%A2%EF%BD%9CPinterest%EF%BD%9CCarla%E3%80%8D%5B%E5%8B%95%E7%94%BB%5D%20_%20%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%20%E3%83%9B%E3%83%83%E3%83%88%E3%82%AB%E3%83%BC%E3%83%9A%E3%83%83%E3%83%88%20%E3%83%94%E3%83%B3%E3%82%AF.mp4"
+            >
               <motion.div
                 initial={{ rotate: -15, scale: 0.5, opacity: 0 }}
                 animate={{ rotate: 0, scale: 1, opacity: 1 }}
                 transition={{ duration: 1, type: "spring" }}
                 className="mb-8"
               >
-                <div className="w-24 h-24 bg-sakura-deep/80 rounded-full flex items-center justify-center mb-6 mx-auto shadow-xl ring-8 ring-white/40 backdrop-blur-sm ethereal-glow overflow-hidden">
-                  <img 
-                    src="https://github.com/marcellnw/undanganfamilyjuvi/blob/main/profiljuvi.png?raw=true" 
-                    alt="Profile" 
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
+                <div className="w-24 h-24 bg-sakura-deep/80 rounded-full flex items-center justify-center mb-6 mx-auto shadow-xl ring-8 ring-white/40 backdrop-blur-sm overflow-hidden">
+                  <img src="https://github.com/marcellnw/undanganfamilyjuvi/blob/main/profiljuvi.png?raw=true" className="w-full h-full object-cover" />
                 </div>
-                <h1 className="text-5xl md:text-6xl font-bold text-sakura-deep mb-2 font-serif italic ethereal-glow">
-                  Undangan Spesial
-                </h1>
-                <p className="text-lg text-gray-500 font-sans font-bold uppercase text-center tracking-widest">
-                  Ibu Epi & Bpk Jun, Ami
-                </p> 
+                <h1 className="text-5xl md:text-6xl font-bold text-sakura-deep mb-2 font-serif italic">Undangan Spesial</h1>
+                <p className="text-lg text-gray-500 font-sans font-bold uppercase tracking-widest">Ibu Epi & Bpk Jun, Ami</p> 
               </motion.div>
-
-              <div className="space-y-6">
-                <p className="text-gray-500 italic font-serif text-lg">
-                  Buka pintu menuju kebahagiaan kami
-                </p>
-                <div className="flex justify-center">
-                  <Button onClick={nextPage}>
-                    Masuk Ke Dalam <ChevronRight className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </PageWrapper>
+              <Button onClick={nextPage}>Masuk Ke Dalam <ChevronRight className="w-4 h-4" /></Button>
+            </PageContent>
           )}
 
-          {/* Bagian Selanjutnya akan dikirim di pesan berikutnya */}
-
           {currentPage === 1 && (
-            <PageWrapper id="schedule">
-              <div className="title-banner-sakura uppercase tracking-[0.2em] relative z-10 mb-6">Rangkaian Acara</div>
+            <PageContent 
+              key="schedule"
+              title="Rangkaian Acara"
+              videoSrc="https://github.com/marcellnw/undanganfamilyjuvi/raw/refs/heads/main/0416(1).mp4"
+            >
               <div className="w-full space-y-4 mb-8">
                 {[
                   { icon: GraduationCap, title: "Wisuda", color: "text-purple-400" },
@@ -142,10 +129,10 @@ export default function App() {
                     key={item.title}
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: i * 0.1 }}
+                    transition={{ delay: i * 0.2 }}
                     className="flex items-center p-4 bg-white/40 backdrop-blur-sm rounded-3xl gap-4 border border-white/50 shadow-sm"
                   >
-                    <item.icon className={`w-8 h-8 ${item.color} ethereal-glow`} />
+                    <item.icon className={`w-8 h-8 ${item.color}`} />
                     <span className="text-lg font-bold text-gray-800 font-serif">{item.title}</span>
                   </motion.div>
                 ))}
@@ -156,7 +143,7 @@ export default function App() {
                 <div className="space-y-2 text-sm text-gray-700 font-serif">
                     <p>🎓 <span className="font-bold">Nama:</span> <span className="italic">Padmi Adika Juvi, S.Pd</span></p>
                     <p>👨‍👩‍👧 <span className="font-bold">Tuan Rumah:</span> <span className="italic">Keluarga Bpk. Zulkarnain & Ibu Karvitamaini</span></p>
-                    <p>🎂 <span className="font-bold">Ulang Tahun:</span> <span className="italic">Ami</span></p>
+                    <p>🎂 <span className="font-bold">Ulang Tahun:</span> <span className="italic italic">Ami</span></p>
                 </div>
               </div>
 
@@ -170,14 +157,17 @@ export default function App() {
               <Button onClick={nextPage}>
                 Waktu & Acara <Calendar className="w-4 h-4 ml-1" />
               </Button>
-            </PageWrapper>
+            </PageContent>
           )}
 
           {currentPage === 2 && (
-            <PageWrapper id="time">
-              <div className="title-banner-sakura uppercase tracking-[0.2em] relative z-10 mb-6">Waktu & Lokasi</div>
+            <PageContent 
+              key="time"
+              title="Waktu & Acara"
+              videoSrc="https://github.com/marcellnw/undanganfamilyjuvi/raw/refs/heads/main/0416(2).mp4"
+            >
               <div className="w-full space-y-8 mb-8 text-left">
-                <div className="flex items-start gap-5">
+                <div className="flex items-start gap-5 group">
                   <div className="bg-sakura/20 p-3 rounded-full backdrop-blur-sm">
                     <Calendar className="w-6 h-6 text-sakura-deep" />
                   </div>
@@ -189,7 +179,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-5 border-t border-white/40 pt-6">
+                <div className="flex items-start gap-5 group border-t border-white/40 pt-6">
                   <div className="bg-luxury-silver/40 p-3 rounded-full backdrop-blur-sm">
                     <MapPin className="w-6 h-6 text-gray-600" />
                   </div>
@@ -202,18 +192,20 @@ export default function App() {
 
               <div className="space-y-4 mb-10 text-gray-500 italic text-sm font-serif">
                 <p>Adalah suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu berkenan hadir.</p>
-                <p className="text-sakura-deep font-bold not-italic font-serif text-base">Semoga kebersamaan ini membawa keberkahan ✨</p>
+                <p className="text-sakura-deep font-bold not-italic font-serif text-base">Semoga kebersamaan ini membawa keberkahan bagi kita semua ✨</p>
               </div>
 
               <Button onClick={nextPage}>
                 Buka Gambar <ImageIcon className="w-4 h-4 ml-1" />
               </Button>
-            </PageWrapper>
+            </PageContent>
           )}
-
           {currentPage === 3 && (
-            <PageWrapper id="gallery">
-              <div className="title-banner-sakura uppercase tracking-[0.2em] relative z-10 mb-6">Gallery Gambar</div>
+            <PageContent 
+              key="gallery"
+              title="Gallery Gambar"
+              videoSrc="https://github.com/marcellnw/undanganfamilyjuvi/raw/refs/heads/main/b1f95141a80513049c6a081b091898db.mp4"
+            >
               <div className="grid grid-cols-2 gap-3 mb-8 w-full">
                 {[1, 2, 3, 4].map((i) => (
                   <motion.div
@@ -234,12 +226,14 @@ export default function App() {
               </div>
 
               <div className="flex flex-col gap-4 w-full">
-                <Button onClick={prevPage}>
+                <Button onClick={resetPage}>
                   Kembali ke Awal
                 </Button>
-                <p className="text-[10px] text-gray-400 font-sans tracking-[0.4em] uppercase text-center">Terima Kasih</p>
+                <p className="text-[10px] text-gray-400 font-sans tracking-[0.4em] uppercase text-center mt-4">
+                  Terima Kasih
+                </p>
               </div>
-            </PageWrapper>
+            </PageContent>
           )}
         </AnimatePresence>
       </main>
