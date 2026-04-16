@@ -80,6 +80,20 @@ const Section = ({ children, id, title, videoSrc }: { children: React.ReactNode,
 
 // --- Main App ---
 
+const [currentPage, setCurrentPage] = React.useState(0);
+
+const nextPage = () => {
+  setCurrentPage((prev) => Math.min(prev + 1, 3));
+};
+
+const prevPage = () => {
+  setCurrentPage((prev) => Math.max(prev - 1, 0));
+};
+
+const goToPage = (index: number) => {
+  setCurrentPage(index);
+};
+
 export default function App() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
