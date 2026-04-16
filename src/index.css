@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -9,30 +9,87 @@
   --color-sakura: #FFB7C5;
   --color-sakura-light: #FFF1F3;
   --color-sakura-deep: #db2777;
+  
+  --color-luxury-pink: #fce4ec;
+  --color-luxury-gold: #d4af37;
+  --color-luxury-silver: #e0e0e0;
 }
 
 @layer base {
   body {
-    @apply antialiased bg-sakura-light text-gray-900 overflow-x-hidden;
+    @apply antialiased bg-luxury-pink text-gray-800 overflow-x-hidden min-h-screen;
+    background-image: 
+      radial-gradient(circle at 20% 20%, rgba(255, 182, 197, 0.4) 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(255, 182, 197, 0.4) 0%, transparent 40%),
+      linear-gradient(to bottom, #fff5f7, #fce4ec);
+    background-attachment: fixed;
   }
 }
 
-.batik-pattern {
-  background-color: transparent;
-  background-image: radial-gradient(#4b5320 0.5px, transparent 0.5px), radial-gradient(#4b5320 0.5px, transparent 0.5px);
-  background-size: 20px 20px;
-  background-position: 0 0, 10px 10px;
-  opacity: 0.08;
+.ornamental-frame {
+  position: fixed;
+  inset: 1rem;
+  border: 1px solid rgba(192, 192, 192, 0.3);
+  pointer-events: none;
+  z-index: 50;
+}
+
+.ornamental-frame::before,
+.ornamental-frame::after {
+  content: '';
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.6;
+}
+
+.ornamental-frame::before {
+  top: -10px;
+  left: -10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0,0 Q50,0 50,50 Q0,50 0,100' fill='none' stroke='%23C0C0C0' stroke-width='0.5'/%3E%3Ccircle cx='10' cy='10' r='2' fill='%23FFB7C5'/%3E%3C/svg%3E");
+}
+
+.ornamental-frame::after {
+  bottom: -10px;
+  right: -10px;
+  transform: rotate(180deg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0,0 Q50,0 50,50 Q0,50 0,100' fill='none' stroke='%23C0C0C0' stroke-width='0.5'/%3E%3Ccircle cx='10' cy='10' r='2' fill='%23FFB7C5'/%3E%3C/svg%3E");
 }
 
 .invitation-card {
-  @apply bg-white/90 backdrop-blur-md border border-white/20 shadow-2xl;
+  @apply bg-white/60 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_0_rgba(255,182,197,0.2)];
+  border-radius: 40px;
 }
 
 .btn-sakura {
-  @apply bg-army text-white px-8 py-3 rounded-full font-sans font-semibold shadow-lg hover:shadow-xl transition-all;
+  @apply bg-sakura-deep/90 text-white px-10 py-4 rounded-full font-sans font-semibold shadow-xl hover:shadow-[0_0_20px_rgba(219,39,119,0.4)] transition-all;
+  backdrop-filter: blur(4px);
 }
 
 .title-banner-sakura {
-  @apply bg-army text-white px-5 py-2 text-xl font-bold mb-4 w-full text-center font-serif tracking-widest;
+  @apply bg-transparent text-sakura-deep px-5 py-2 text-2xl font-bold mb-6 w-full text-center font-serif tracking-[0.2em];
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.ethereal-glow {
+  filter: drop-shadow(0 0 8px rgba(255, 182, 197, 0.5));
+}
+
+@keyframes float-petal {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { transform: translate(100px, 100vh) rotate(360deg); opacity: 0; }
+}
+
+.floating-petal {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1;
+  background: white;
+  border-radius: 50% 0 50% 50%;
+  box-shadow: 0 0 5px rgba(255, 182, 197, 0.3);
+  animation: float-petal 10s linear infinite;
 }
